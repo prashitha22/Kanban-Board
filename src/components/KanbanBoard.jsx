@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import {
+  Home,
+  ClipboardList,
+  Calendar,
+  Bell,
+  Cog,
+  LogOut
+} from 'lucide-react'; 
 
 export default function KanbanBoard() {
   const [tasks, setTasks] = useState({
@@ -9,9 +17,10 @@ export default function KanbanBoard() {
   });
 
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
 
   useEffect(() => {
-    // Fetch initial todos from API
+  
     fetch("https://jsonplaceholder.typicode.com/todos?_limit=0")
       .then((res) => res.json())
       .then((data) => {
@@ -26,7 +35,7 @@ export default function KanbanBoard() {
 
         setTasks({
           todo: todoTasks,
-          inProgress: [], // start empty
+          inProgress: [], 
           done: doneTasks,
         });
       });
@@ -70,17 +79,19 @@ export default function KanbanBoard() {
     if (!newTaskTitle.trim()) return;
 
     const newTask = {
-      id: Date.now().toString(), // unique id
+      id: Date.now().toString(), 
       title: newTaskTitle.trim(),
+      description: newTaskDescription.trim(),
       completed: false,
     };
 
     setTasks((prev) => ({
       ...prev,
-      todo: [newTask, ...prev.todo], // add to "To Do"
+      todo: [newTask, ...prev.todo], 
     }));
 
     setNewTaskTitle("");
+    setNewTaskDescription("");
   };
 
   const columns = [
@@ -90,39 +101,78 @@ export default function KanbanBoard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      {/* Add New Task Section */}
-      <div className="mb-8">
+    <div className="min-h-screen bg-gray-100 flex ">
+        <aside className="w-16 md:w-20 bg-[#583185] flex flex-col items-center py-6 space-y-8">
+        
+        <Home className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+        <ClipboardList className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+        <Calendar className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+        <Bell className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+        <Cog className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+        <LogOut className="h-6 w-6 text-white hover:text-[#c597f5] cursor-pointer" />
+
+      </aside>
+
+      <div className="flex-1 flex flex-col">
+        
+ 
+        <header className="bg-[#eee8f2] p-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-[#583185]">Task Board</h1>
+          <div className="relative w-48">
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-full pl-10 pr-4 py-2 rounded-md bg-white shadow-sm focus:outline-none"
+            />
+            <div className="absolute left-3 top-2.5 text-gray-400">
+              🔍
+            </div>
+          </div>
+        </header>
+
+      <div className=" py-6 px-8">
         <h2 className="text-2xl font-bold mb-4">Add New Task</h2>
-        <div className="flex">
+        <div className="flex flex-col md:flex-row gap-4">
           <input
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
-            className="border p-2 flex-1 rounded-l"
+            className="border p-2 flex-1 rounded"
             placeholder="Enter task title..."
+          />
+          <input
+            type="text"
+            value={newTaskDescription}
+            onChange={(e) => setNewTaskDescription(e.target.value)}
+            className="border p-2 flex-1 rounded"
+            placeholder="Enter task description (optional)..."
           />
           <button
             onClick={handleAddTask}
-            className="bg-blue-600 text-white px-4 rounded-r hover:bg-blue-700 transition"
+            className="bg-[#583185] text-white px-4 rounded hover:bg-blue-700 transition h-[43px]"
           >
-            Add
+            + Add
           </button>
         </div>
       </div>
 
-      {/* Kanban Board */}
+
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex gap-6">
+        <div className="flex max-sm:flex-col sm:flex-col md:flex-row xl:flex-row lg:flex-row 2xl:flex-row gap-6 p-8">
           {columns.map((column) => (
             <div key={column.key} className="flex-1">
-              <h2 className="text-xl font-bold mb-4">{column.title}</h2>
+              <h2 className="text-xl font-bold mb-4 ">{column.title}</h2>
               <Droppable droppableId={column.key}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`bg-white rounded-lg shadow-md p-4 space-y-4 min-h-[300px] transition-colors ${
+                    className={`bg-white border-t-4 border-[#b07aed] rounded-lg shadow-md p-4 space-y-4 min-h-[300px] transition-colors ${
                       snapshot.isDraggingOver ? "bg-blue-100" : ""
                     }`}
                   >
@@ -137,7 +187,12 @@ export default function KanbanBoard() {
                               snapshot.isDragging ? "bg-blue-300" : ""
                             }`}
                           >
-                            {task.title}
+                           <div className="font-semibold">{task.title}</div>
+                            {task.description && (
+                              <div className="text-sm text-gray-600 mt-1">
+                                {task.description}
+                              </div>
+                            )}
                           </div>
                         )}
                       </Draggable>
@@ -150,6 +205,7 @@ export default function KanbanBoard() {
           ))}
         </div>
       </DragDropContext>
+      </div>
     </div>
   );
 }
