@@ -154,7 +154,7 @@ export default function KanbanBoard() {
           />
           <button
             onClick={handleAddTask}
-            className="bg-[#583185] text-white px-4 rounded hover:bg-blue-700 transition h-[43px]"
+            className="bg-[#583185] text-white px-4 rounded h-[43px] cursor-pointer"
           >
             + Add
           </button>

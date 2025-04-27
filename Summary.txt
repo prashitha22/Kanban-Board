@@ -1,0 +1,34 @@
+For this project, I built a Task Management Dashboard using React and TailwindCSS, following the Kanban-style board layout with three columns:
+
+To Do
+
+In Progress
+
+Done
+
+Tasks can be:
+
+Viewed (fetched from mock API https://jsonplaceholder.typicode.com)
+
+Created (via a form at the top)
+
+Dragged and dropped between columns to change status.
+
+I used @hello-pangea/dnd for drag-and-drop support and made sure the project is fully responsive for both desktop and mobile devices.
+API integration was simulated by fetching from the mock API and updating the local state accordingly.
+
+I am satisfied with the overall structure, UI cleanliness, and responsiveness.
+However, API update (PATCH) operations after drag-and-drop are only simulated locally (not persisted on the server).
+
+While the project covers all the core functionalities (view, add, move tasks), I recognize some areas where the implementation could have been better:
+
+No Real API Update: After moving tasks across columns, the updated task status is not truly updated on the backend because JSONPlaceholder API is read-only for updates. Ideally, this would involve a real PUT/PATCH request.
+If I had more time, I would:
+
+Implement Full CRUD with a Local Mock Server: Set up json-server locally to properly POST, PATCH, and DELETE tasks in real time.
+
+Technology	Self Rating
+React	          7/10
+TailwindCSS	  9/10
+HTML5             10/10
+CSS3              10/10
